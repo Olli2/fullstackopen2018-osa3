@@ -1,7 +1,10 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+var morgan = require('morgan')
 app.use(bodyParser.json())
+app.use(morgan('tiny'))
+
 
   let persons = [
     {
@@ -26,29 +29,25 @@ app.use(bodyParser.json())
     },
   ]
 
+
   app.get('/api/persons', (req, res) => {
-      console.log('GET /persons')
       res.json(persons)
   })
 
   app.get('/api/persons/:id', (req, res) => {
-    console.log('GET /api/persons/' + req.params.id)
     const person = persons.find(a => a.id === Number(req.params.id))
     if(person) {
        res.json(person) 
     } else {
-        console.log('   -> id not found')
         res.status(404).end()
     }
   })
 
   app.get('/info', (req, res) => {
-    console.log('GET /info')
     res.send(`<p> Luettelossa on ${persons.length} henkilön tiedot</p> <p> ${new Date()} </p>`)
   })
 
   app.post('/api/persons/', (req, res) => {
-      console.log('POST /api/persons')
       const genId = Math.random() * (50000 - 5) + 5
       const body = req.body
 
