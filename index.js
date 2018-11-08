@@ -4,6 +4,8 @@ const bodyParser = require('body-parser')
 var morgan = require('morgan')
 app.use(bodyParser.json())
 app.use(morgan('tiny'))
+const cors = require('cors')
+app.use(cors())
 
 
   let persons = [
