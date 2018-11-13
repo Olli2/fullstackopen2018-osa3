@@ -1,5 +1,3 @@
-//mongodb://<dbuser>:<dbpassword>@ds155663.mlab.com:55663/fullsdb
-
 const mongoose = require('mongoose')
 const len = process.argv.length
 const url = 'mongodb://username:password@ds155663.mlab.com:55663/fullsdb'

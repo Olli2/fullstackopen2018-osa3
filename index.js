@@ -19,36 +19,61 @@ const Person = require('./models/person')
 
   app.get('/api/persons/:id', (req, res) => {
     Person
-        .findById(Number(req.params.id))
-        .then(a => {
-            res.json(a)
+        .findById(req.params.id)
+        .then(person => {
+          if(person) {
+            res.json(Person.format(person))
+          } else {
+            res.status(404).end()
+          }
+        })
+        .catch(error => {
+          res.status(400).send({error: 'invalid id'})
         })
   })
 
   app.get('/info', (req, res) => {
-    res.send(`<p> Luettelossa on ${persons.length} henkilön tiedot</p> <p> ${new Date()} </p>`)
+    Person.find({}).then(persons => {
+      res.send(`<p> Luettelossa on ${persons.length} henkilön tiedot</p> <p> ${new Date()} </p>`)
+    })
   })
 
   app.post('/api/persons/', (req, res) => {
-      const genId = Math.random() * (50000 - 5) + 5
-      const body = req.body 
-      if (body === undefined) {
-        return res.status(400).json({error: 'content missing'})
-      }
-      const person = new Person({
-        name: body.name,
-        number: body.number
+    const body = req.body 
+    if (body === undefined) {
+      return res.status(400).json({error: 'content missing'})
+    }
+    const person = new Person({
+      name: body.name,
+      number: body.number
+    })
+    person
+      .save()
+      .then(savedPerson => {
+          res.json(savedPerson)
       })
-      person.save()
-        .then(savedPerson => {
-            res.json(savedPerson)
-        })
-        
+})
+
+  app.put('/api/persons/:id', (req, res) => {
+    const body = req.body
+    const person = {
+      name: body.name,
+      number: body.number
+    }
+    Person.findOneAndUpdate({ _id: body.id }, person, {new: true})
+      .then(updatedPerson => {  
+        res.json(updatedPerson.format)
+      })
   })
 
   app.delete('/api/persons/:id', (req, res) => {
-    persons = persons.filter(person => person.id !== Number(req.params.id))
-    res.status(204).end()
+    Person.findByIdAndRemove(req.params.id)
+      .then(result => {
+        res.status(204).end()
+      })
+      .catch(error => {
+        res.status(400).send({error: 'invalid id'})
+      })
   })
 
   const PORT = process.env.PORT || 3001
