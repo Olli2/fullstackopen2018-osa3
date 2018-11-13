@@ -31,18 +31,19 @@ const Person = require('./models/person')
 
   app.post('/api/persons/', (req, res) => {
       const genId = Math.random() * (50000 - 5) + 5
-      const body = req.body
-      if (body.content === undefined) {
+      const body = req.body 
+      if (body === undefined) {
         return res.status(400).json({error: 'content missing'})
       }
       const person = new Person({
-        name: body.content.name,
-        number: body.content.number
+        name: body.name,
+        number: body.number
       })
       person.save()
         .then(savedPerson => {
             res.json(savedPerson)
         })
+        
   })
 
   app.delete('/api/persons/:id', (req, res) => {

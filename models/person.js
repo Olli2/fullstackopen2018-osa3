@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const url = 'mongodb://user:password@ds155663.mlab.com:55663/fullsdb'
+const url = 'mongodb://usr:pass@ds155663.mlab.com:55663/fullsdb'
 mongoose.connect(url, { useNewUrlParser: true })
 
 var personSchema = mongoose.Schema({
