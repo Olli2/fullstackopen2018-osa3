@@ -38,6 +38,12 @@ const Person = require('./models/person')
     })
   })
 
+  app.get('/info', (req, res) => {
+    Person.find({}).then(persons => {
+      res.send(`<p> Luettelossa on ${persons.length} henkilön tiedot</p> <p> ${new Date()} </p>`)
+    })
+  })
+
   app.post('/api/persons/', (req, res) => {
     const body = req.body 
     if (body === undefined) {
@@ -47,12 +53,20 @@ const Person = require('./models/person')
       name: body.name,
       number: body.number
     })
-    person
-      .save()
-      .then(savedPerson => {
-          res.json(savedPerson)
-      })
-})
+
+    Person.find({}).then(persons => {
+      let p = persons.find(a => a.name === body.name)
+      if(!p) {
+        person
+          .save()
+          .then(savedPerson => {
+              res.json(savedPerson)
+          })
+      } else {
+        res.status(403).send({error: 'name already in use'})
+      }
+    })
+  })
 
   app.put('/api/persons/:id', (req, res) => {
     const body = req.body

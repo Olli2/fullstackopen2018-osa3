@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
-const url = 'mongodb://user:passwd@ds155663.mlab.com:55663/fullsdb'
-mongoose.connect(url, { useNewUrlParser: true })
-
+if(process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
 var personSchema = mongoose.Schema({
     name: String,
     number: String,
