@@ -60,7 +60,7 @@ const Person = require('./models/person')
         person
           .save()
           .then(savedPerson => {
-              res.json(savedPerson)
+              res.json(Person.format(savedPerson))
           })
       } else {
         res.status(403).send({error: 'name already in use'})
